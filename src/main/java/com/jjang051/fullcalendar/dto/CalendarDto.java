@@ -1,5 +1,8 @@
 package com.jjang051.fullcalendar.dto;
 
+
+import com.jjang051.fullcalendar.entity.Calendar;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,4 +23,14 @@ public class CalendarDto {
     private String end;
     private boolean allDay;
     private String priority;
+
+    public static Calendar toEntity(CalendarDto calendarDto) {
+        return Calendar.builder()
+                .start(calendarDto.getStart())
+                .end(calendarDto.getEnd())
+                .allDay(calendarDto.isAllDay())
+                .priority(calendarDto.getPriority())
+                .start(calendarDto.getStart())
+            .build();
+    }
 }
