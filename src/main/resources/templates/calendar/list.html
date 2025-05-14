@@ -66,6 +66,16 @@
               <div class="mt-3">
                 <input type="time" class="form-control" name="endTime" />
               </div>
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value=""
+                  id="allDay"
+                  name="allDay"
+                />
+                <label class="form-check-label" for="allDay"> all day </label>
+              </div>
             </form>
           </div>
           <div class="modal-footer">
@@ -88,31 +98,6 @@
       const calendarModal = new bootstrap.Modal("#calendar-modal", {});
       const btnConfirm = document.querySelector("#btn-confirm");
       const calendarForm = document.forms["calendar-form"];
-      btnConfirm.addEventListener("click", (e) => {
-        e.preventDefault(); //submit
-        const start = calendarForm.start.value;
-        const end = calendarForm.end.value;
-        const title = calendarForm.title.value;
-        const allDay = true;
-        const sendData = {
-          title: title,
-          start: start,
-          end: end,
-          allDay: allDay,
-          priority: "important",
-        };
-        fetch("/calendar/insert", {
-          method: "post",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(sendData),
-        })
-          .then((response) => response.json())
-          .then((json) => {
-            console.log(json); //{isInsert:"fail"}
-          });
-      });
 
       document.addEventListener("DOMContentLoaded", function () {
         const calendarEl = document.getElementById("calendar");
@@ -157,7 +142,12 @@
           */
           dateClick: function (e) {
             console.log("날짜 클릭");
+            console.log(e);
             calendarModal.show();
+            calendarForm.start.value = e.dateStr;
+            calendarForm.end.value = "";
+            calendarForm.startTime.value = "";
+            calendarForm.startTime.value = "";
             /*
             const title = prompt("일정 추가해 주세요");
             if (title) {
@@ -169,6 +159,35 @@
             }
             */
           },
+        });
+        btnConfirm.addEventListener("click", (e) => {
+          e.preventDefault(); //submit
+          const start = calendarForm.start.value;
+          const end = calendarForm.end.value;
+          const title = calendarForm.title.value;
+          const allDay = calendarForm.allDay.checked ? true : false;
+          const sendData = {
+            title: title,
+            start: start,
+            end: end,
+            allDay: allDay,
+            priority: "important",
+          };
+          fetch("/calendar/insert", {
+            method: "post",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(sendData),
+          })
+            .then((response) => response.json())
+            .then((json) => {
+              if (json.isInsert === "ok") {
+                calendarModal.hide();
+                calendar.refetchEvents();
+              }
+              console.log(json); //{isInsert:"fail"}
+            });
         });
         calendar.render();
       });

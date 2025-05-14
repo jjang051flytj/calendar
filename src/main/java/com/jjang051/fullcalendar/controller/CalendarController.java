@@ -35,7 +35,7 @@ public class CalendarController {
 
     @GetMapping("/all")
     @ResponseBody
-    public List<Calendar> all() {
+    public List<CalendarDto> all() {
         return calendarService.getAll();
     }
 

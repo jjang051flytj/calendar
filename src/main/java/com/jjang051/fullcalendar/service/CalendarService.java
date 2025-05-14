@@ -25,10 +25,9 @@ public class CalendarService {
         return calendarRepository.save(calendar);
     }
 
-    public List<Calendar> getAll() {
+    public List<CalendarDto> getAll() {
         List<Calendar> calendarList =calendarRepository.findAll();
-        return calendarList;
-        /*
+        //return calendarList;
         return calendarList.stream().map(calendar -> new CalendarDto(
                 calendar.getId(),
                 calendar.getTitle(),
@@ -38,6 +37,5 @@ public class CalendarService {
                 calendar.getPriority()
         ))
         .collect(Collectors.toList());
-         */
     }
 }
