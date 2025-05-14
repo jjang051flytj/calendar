@@ -30,7 +30,16 @@ public class CalendarDto {
                 .end(calendarDto.getEnd())
                 .allDay(calendarDto.isAllDay())
                 .priority(calendarDto.getPriority())
-                .start(calendarDto.getStart())
+                .title(calendarDto.getTitle())
             .build();
+    }
+
+    public CalendarDto(Calendar calendar) {
+        this.id= calendar.getId();
+        this.title= calendar.getTitle();
+        this.start= calendar.getStart();
+        this.end= calendar.getEnd();
+        this.allDay= calendar.getAllDay();
+        this.priority= calendar.getPriority();
     }
 }

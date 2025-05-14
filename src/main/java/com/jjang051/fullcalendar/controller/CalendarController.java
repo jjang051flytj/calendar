@@ -1,6 +1,7 @@
 package com.jjang051.fullcalendar.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
@@ -31,6 +32,14 @@ public class CalendarController {
     public String list() {
         return "calendar/list";
     }
+
+    @GetMapping("/all")
+    @ResponseBody
+    public List<Calendar> all() {
+        return calendarService.getAll();
+    }
+
+
     @PostMapping("/insert")
     @ResponseBody
     public Map<String,String> insert(@RequestBody CalendarDto calendarDto ) {

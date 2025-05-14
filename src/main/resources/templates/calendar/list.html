@@ -126,7 +126,20 @@
               backgroundColor: "#f00",
               borderColor: "#f00",
             },
+            {
+              events: (e, successCallback, failCallback) => {
+                fetch("/calendar/all")
+                  .then((response) => response.json())
+                  .then((json) => {
+                    successCallback(json);
+                  })
+                  .catch((json) => {
+                    failCallback(json);
+                  });
+              },
+            },
           ],
+          /*
           events: [
             {
               title: "수업",
@@ -141,6 +154,7 @@
               description: "떨린다",
             },
           ],
+          */
           dateClick: function (e) {
             console.log("날짜 클릭");
             calendarModal.show();
