@@ -66,7 +66,65 @@
               <div class="mt-3">
                 <input type="time" class="form-control" name="endTime" />
               </div>
-              <div class="form-check">
+              <div class="form-check mt-3">
+                <div class="form-check mt-3">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="priority"
+                    id="priority1"
+                    value="1"
+                  />
+                  <label class="form-check-label" for="priority1"
+                    >당장 해야 할 일</label
+                  ><br />
+
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="priority"
+                    id="priority2"
+                    value="2"
+                  />
+                  <label class="form-check-label" for="priority2"
+                    >조금 있다가 해야할 일</label
+                  ><br />
+
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="priority"
+                    id="priority3"
+                    value="3"
+                  />
+                  <label class="form-check-label" for="priority3"
+                    >내일 해도 될 일</label
+                  ><br />
+
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="priority"
+                    id="priority4"
+                    value="4"
+                  />
+                  <label class="form-check-label" for="priority4"
+                    >모레 해도 될 일</label
+                  ><br />
+
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="priority"
+                    id="priority5"
+                    value="5"
+                  />
+                  <label class="form-check-label" for="priority5"
+                    >다음 주에 해도 될 일</label
+                  >
+                </div>
+              </div>
+              <div class="form-check mt-3">
                 <input
                   class="form-check-input"
                   type="checkbox"
@@ -98,12 +156,23 @@
       const calendarModal = new bootstrap.Modal("#calendar-modal", {});
       const btnConfirm = document.querySelector("#btn-confirm");
       const calendarForm = document.forms["calendar-form"];
-
+      const priorityColorMap = {
+        1: "#ff0000", // 빨강
+        2: "#ff8000", // 주황
+        3: "#ffd700", // 노랑
+        4: "#00bfff", // 파랑
+        5: "#90ee90", // 연두
+      };
       document.addEventListener("DOMContentLoaded", function () {
+        let end = "";
         const calendarEl = document.getElementById("calendar");
         const calendar = new FullCalendar.Calendar(calendarEl, {
           initialView: "dayGridMonth",
+
           googleCalendarApiKey: "AIzaSyCBvySJzIymugLNiAcWiffZcMUAvVjF6Ic",
+          selectable: true,
+          editable: true, // 드래그 앤 드롭 활성화
+          droppable: true, // 드래그한 이벤트를 다른 날짜로 드롭 가능
           eventSources: [
             {
               googleCalendarId:
@@ -145,9 +214,9 @@
             console.log(e);
             calendarModal.show();
             calendarForm.start.value = e.dateStr;
-            calendarForm.end.value = "";
+            calendarForm.end.value = e.dateStr;
             calendarForm.startTime.value = "";
-            calendarForm.startTime.value = "";
+            calendarForm.endTime.value = "";
             /*
             const title = prompt("일정 추가해 주세요");
             if (title) {
@@ -159,19 +228,49 @@
             }
             */
           },
+          select: function (e) {
+            const tempEndDate = new Date(e.endStr); //마지막 날짜가지고 date설정
+            console.log("하루 더 간 일정===", tempEndDate);
+            tempEndDate.setDate(tempEndDate.getDate() - 1);
+            console.log("하루 빼서 정상인 일정===", tempEndDate);
+            console.log(
+              "하루 빼서 정상인 일정 toISOString===",
+              tempEndDate.toISOString()
+            );
+            console.log(
+              "하루 빼서 정상인 일정 toISOString===",
+              tempEndDate.toISOString().split("T")[0]
+            );
+
+            console.log(
+              "하루 빼서 정상인 일정=== toDateString",
+              tempEndDate.toDateString()
+            );
+            const realEndDate = tempEndDate.toISOString().split("T")[0];
+            console.log(e);
+            calendarModal.show();
+            calendarForm.start.value = e.startStr;
+            calendarForm.end.value = realEndDate;
+            calendarForm.startTime.value = "";
+            calendarForm.endTime.value = "";
+            calendarForm.allDay.checked = true;
+            end = e.endStr;
+          },
         });
         btnConfirm.addEventListener("click", (e) => {
           e.preventDefault(); //submit
           const start = calendarForm.start.value;
-          const end = calendarForm.end.value;
           const title = calendarForm.title.value;
+          const priority = calendarForm.priority.value;
+
           const allDay = calendarForm.allDay.checked ? true : false;
+
           const sendData = {
             title: title,
             start: start,
             end: end,
             allDay: allDay,
-            priority: "important",
+            priority: priority,
           };
           fetch("/calendar/insert", {
             method: "post",
@@ -184,7 +283,15 @@
             .then((json) => {
               if (json.isInsert === "ok") {
                 calendarModal.hide();
-                calendar.refetchEvents();
+                //calendar.refetchEvents(); //이건 전체 리스트를 한번 갱신하기
+                calendar.addEvent({
+                  id: json.savedCalendar.id,
+                  title: json.savedCalendar.title,
+                  start: json.savedCalendar.start,
+                  end: json.savedCalendar.end,
+                  allDay: json.savedCalendar.allDay,
+                });
+                //이건 일정 하나만 기존꺼에 추가하기...
               }
               console.log(json); //{isInsert:"fail"}
             });

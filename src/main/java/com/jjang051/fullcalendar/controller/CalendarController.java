@@ -39,23 +39,19 @@ public class CalendarController {
         return calendarService.getAll();
     }
 
-
     @PostMapping("/insert")
     @ResponseBody
-    public Map<String,String> insert(@RequestBody CalendarDto calendarDto ) {
+    public Map<String,Object> insert(@RequestBody CalendarDto calendarDto ) {
         log.info("calendarDto==={}",calendarDto);
         Calendar savedCalendar = calendarService.insert(calendarDto);
-        Map<String, String> resultMap =  new HashMap<>();
+        Map<String, Object> resultMap =  new HashMap<>();
         if(savedCalendar!=null) {
             resultMap.put("isInsert", "ok");
+            resultMap.put("savedCalendar", savedCalendar);
         } else {
             resultMap.put("isInsert", "fail");
+            resultMap.put("savedCalendar", null);
         }
         return resultMap; 
-        /*
-        {
-            "isInsert":"fail"
-        }
-        */
     }
 }

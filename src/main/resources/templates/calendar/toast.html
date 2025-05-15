@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Toast UI Calendar Example</title>
+    <link
+      href="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      #calendar {
+        width: 100%;
+        height: 600px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="calendar"></div>
+
+    <script src="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.js"></script>
+    <script>
+      // Toast UI Calendar 인스턴스 생성
+      const calendar = new tui.Calendar("#calendar", {
+        defaultView: "month", // 기본적으로 월보기
+        taskView: true, // 할 일 보기
+        scheduleView: true, // 일정 보기
+        useCreationPopup: true, // 일정 추가 팝업 사용
+        useDetailPopup: true, // 일정 상세 보기 팝업 사용
+      });
+
+      // 예시 일정 데이터 추가
+      calendar.createSchedules([
+        {
+          id: "1",
+          calendarId: "1",
+          title: "회의",
+          category: "time",
+          dueDateClass: "",
+          start: "2025-05-15T10:00:00",
+          end: "2025-05-15T11:00:00",
+          location: "회의실 A",
+          isAllDay: false,
+        },
+        {
+          id: "2",
+          calendarId: "1",
+          title: "점심",
+          category: "time",
+          dueDateClass: "",
+          start: "2025-05-15T12:00:00",
+          end: "2025-05-15T13:00:00",
+          location: "식당",
+          isAllDay: false,
+        },
+      ]);
+    </script>
+  </body>
+</html>
