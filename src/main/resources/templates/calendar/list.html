@@ -184,7 +184,20 @@
                 fetch("/calendar/all")
                   .then((response) => response.json())
                   .then((json) => {
-                    successCallback(json);
+                    console.log(json);
+                    //map은 바꾸기....
+                    const changeJson = json.map((item) => {
+                      const endDate = new Date(item.end);
+                      endDate.setDate(endDate.getDate() + 1);
+                      const end = endDate.toISOString().split("T")[0]; //2025-05-21T11:23:22
+
+                      return {
+                        ...item,
+                        end: end,
+                      };
+                    });
+                    console.log(changeJson);
+                    successCallback(changeJson);
                   })
                   .catch((json) => {
                     failCallback(json);
@@ -253,6 +266,10 @@
             calendarForm.startTime.value = "";
             calendarForm.endTime.value = "";
             calendarForm.allDay.checked = true;
+          },
+          eventChange: function (e) {
+            console.log("이벤트가 변경");
+            console.log(e);
           },
         });
         btnConfirm.addEventListener("click", (e) => {
