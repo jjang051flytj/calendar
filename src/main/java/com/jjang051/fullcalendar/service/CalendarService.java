@@ -74,4 +74,13 @@ public class CalendarService {
         }
         return null;
     }
+
+    @Transactional
+    public void delete(int id) {
+        if(!calendarRepository.existsById(id)) {
+            throw new IllegalArgumentException("해당하는 일정이 없습니다.");
+        }
+        calendarRepository.deleteById(id);
+        //lendar calendar = calendarRepository.findById(id);
+    }
 }

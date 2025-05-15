@@ -15,7 +15,9 @@ import com.jjang051.fullcalendar.service.CalendarService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -57,11 +59,28 @@ public class CalendarController {
 
     @PostMapping("/change")
     @ResponseBody
-    public String change(@RequestBody CalendarDto calendarDto) {
+    public Map<String,Object> change(@RequestBody CalendarDto calendarDto) {
         
         log.info("calendarDto==={}",calendarDto);
-        Calendar savedCalendar = calendarService.change(calendarDto);
-        return null;
+        Calendar changedCalendar = calendarService.change(calendarDto);
+        Map<String, Object> resultMap =  new HashMap<>();
+        if(changedCalendar!=null) {
+            resultMap.put("isChange", "ok");
+            resultMap.put("savedCalendar", changedCalendar);
+        } else {
+            resultMap.put("isChange", "fail");
+            resultMap.put("savedCalendar", null);
+        }
+        return resultMap; 
+    }
+    @DeleteMapping("/delete/{id}")
+    @ResponseBody
+    public Map<String,Object> delete(@PathVariable int id) {
+        log.info("id==={}",id);
+        calendarService.delete(id);
+        Map<String, Object> resultMap =  new HashMap<>();
+        resultMap.put("isDelete", "ok");
+        return resultMap; 
     }
     
 }
