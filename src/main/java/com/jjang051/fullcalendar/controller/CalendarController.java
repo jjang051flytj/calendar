@@ -54,4 +54,14 @@ public class CalendarController {
         }
         return resultMap; 
     }
+
+    @PostMapping("/change")
+    @ResponseBody
+    public String change(@RequestBody CalendarDto calendarDto) {
+        
+        log.info("calendarDto==={}",calendarDto);
+        Calendar savedCalendar = calendarService.change(calendarDto);
+        return null;
+    }
+    
 }

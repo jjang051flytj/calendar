@@ -270,6 +270,21 @@
           eventChange: function (e) {
             console.log("이벤트가 변경");
             console.log(e);
+            const sendData = {
+              title: e.event.title,
+              start: e.event.startStr,
+              end: e.event.endStr,
+              id: e.event.id,
+              allDay: e.event.allDay,
+              priority: e.event.priority,
+            };
+            fetch("/calendar/change", {
+              method: "post",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(sendData),
+            });
           },
         });
         btnConfirm.addEventListener("click", (e) => {

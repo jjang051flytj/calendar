@@ -10,9 +10,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
+//@Setter
 @Table(name="table_calendar")
 @Builder
 @NoArgsConstructor
@@ -31,4 +33,12 @@ public class Calendar {
     private String title;
     private Boolean allDay;
     private String priority;
+
+    public void updateDate(String start, String end) {
+        this.start = start;
+        this.end = end;
+    }
+    public void updateTitle(String title) {
+        this.title = title;
+    }
 }
