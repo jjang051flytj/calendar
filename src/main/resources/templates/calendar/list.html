@@ -164,7 +164,6 @@
         5: "#90ee90", // 연두
       };
       document.addEventListener("DOMContentLoaded", function () {
-        let end = "";
         const calendarEl = document.getElementById("calendar");
         const calendar = new FullCalendar.Calendar(calendarEl, {
           initialView: "dayGridMonth",
@@ -254,12 +253,12 @@
             calendarForm.startTime.value = "";
             calendarForm.endTime.value = "";
             calendarForm.allDay.checked = true;
-            end = e.endStr;
           },
         });
         btnConfirm.addEventListener("click", (e) => {
           e.preventDefault(); //submit
           const start = calendarForm.start.value;
+          const end = calendarForm.end.value; //하루 줄어든 날짜....
           const title = calendarForm.title.value;
           const priority = calendarForm.priority.value;
 
@@ -284,11 +283,14 @@
               if (json.isInsert === "ok") {
                 calendarModal.hide();
                 //calendar.refetchEvents(); //이건 전체 리스트를 한번 갱신하기
+                const plusOneDay = new Date(json.savedCalendar.end);
+                plusOneDay.setDate(plusOneDay.getDate() + 1);
+                const realDate = plusOneDay.toISOString().split("T")[0];
                 calendar.addEvent({
                   id: json.savedCalendar.id,
                   title: json.savedCalendar.title,
                   start: json.savedCalendar.start,
-                  end: json.savedCalendar.end,
+                  end: realDate,
                   allDay: json.savedCalendar.allDay,
                 });
                 //이건 일정 하나만 기존꺼에 추가하기...
